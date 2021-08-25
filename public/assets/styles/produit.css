@@ -1,0 +1,216 @@
+* {
+    box-sizing: border-box;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+Tammudu+2&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+  @media screen and (max-width:350px) {
+	  .main-item-details .container{
+		  padding: 0px;
+	  }
+  }
+.main-items-page{
+    background-color: white;
+    border-radius: 5px;
+    margin-bottom:25px ;
+	
+}
+.main-item-details  {
+	background-color: #f5f5f5;
+
+}
+.main-item-details-content  {
+	box-shadow: 0 0 2px #aaa;
+}
+.shipping-details  {
+	box-shadow: 0 0 2px #aaa;
+}
+.main-item-details .breadcrumb-link{
+	font-size: 13px;
+	color: black;
+
+}
+.main-item-details .breadcrumb-link a{
+	color: black;
+}
+.main-item-details .spinner{
+	min-height: 250px;
+	position: relative;
+}
+.main-item-details .spinner .lds-default {
+	position: absolute;
+	left: 40%;
+	top: 25%;
+}
+.main-item-details .item-title{
+	font-size: 20px;
+	font-weight: 400;
+	color: black;
+	
+}
+.main-item-details .item-price{
+	font-size: 18px;
+	
+}
+.main-item-details .btn-customize {
+
+	box-shadow: none;
+	border-radius: 0;
+	font-size: 17px;
+	color: black;
+	background-color:rgb(223, 199, 169);
+	font-family: 'Roboto', sans-serif;
+}
+.main-item-details .btn-cart {
+	font-size: 17px;
+	color: black;
+	background-color: burlywood;
+	box-shadow: none;
+	border-radius: 0;
+	font-family: 'Roboto', sans-serif;
+	
+	
+}
+.main-item-details .spinner{
+	border: 1px solid #aaa ;
+}
+.rating_r i:not(:last-of-type)
+{
+	margin-right: 4px;
+}
+.rating_r i::before
+{
+	font-family: 'FontAwesome';
+	content: "\f006";
+	font-style: normal;
+	font-size: 16px;
+	color: #4a4a4a;
+}
+
+.rating_r_1 i:first-child::before{content: "\f005";}
+.rating_r_2 i:first-child::before{content: "\f005";}
+.rating_r_2 i:nth-child(2)::before{content: "\f005";}
+.rating_r_3 i:first-child::before{content: "\f005";}
+.rating_r_3 i:nth-child(2)::before{content: "\f005";}
+.rating_r_3 i:nth-child(3)::before{content: "\f005";}
+.rating_r_4 i:first-child::before{content: "\f005";}
+.rating_r_4 i:nth-child(2)::before{content: "\f005";}
+.rating_r_4 i:nth-child(3)::before{content: "\f005";}
+.rating_r_4 i:nth-child(4)::before{content: "\f005";}
+.rating_r_5 i:first-child::before{content: "\f005";}
+.rating_r_5 i:nth-child(2)::before{content: "\f005";}
+.rating_r_5 i:nth-child(3)::before{content: "\f005";}
+.rating_r_5 i:nth-child(4)::before{content: "\f005";}
+.rating_r_5 i:nth-child(5)::before{content: "\f005";}
+.item-button button{
+	font-family: 'Bodoni Moda', serif;
+}
+
+.main-item-details .btn-customize{
+	float: right;
+}
+
+
+
+
+.main-items-page .sortLabel{
+	font-size: 15px;
+	font-family: 'Open Sans', sans-serif;
+}
+.main-items-page .select{
+    width:50%;
+}
+.main-items-page .sort-price {
+	float: right;
+}
+.main-items-page .category-title {
+	text-align: center;
+	font-size: 25px;
+	letter-spacing: 1px;
+	font-family: Centaur,serif;
+}
+.main-items-page .category-description {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
+}
+
+.main-items-page  .range{
+	width:150px;
+	height:10px;
+	border: solid 1px;
+	border-radius: 5px; 
+}
+.main-items-page .range-button {
+	height:15px;
+    width: 15px;
+	border: solid 1px ;
+	border-radius: 100%;
+}
+
+
+/* take this away from here */
+.items-list > div{
+	min-height: 110px;
+}
+.items-list img {
+	width: 100%;
+}
+/* """"""" */
+@media screen and (min-width:768px) {
+	.main-items-page .first-line{
+		display:none ;
+	}
+	.main-items-page{
+		margin-top: 5px;
+	}
+	.main-items-page .item-title{
+		font-size: 16px;
+	}
+	.main-items-page .item-price{
+		font-size: 16px;
+	}
+}
+@media screen and (max-width:768px) {
+	.main-items-page{
+		position: relative;
+		bottom: 5px;
+	}
+	.main-items-page .item-title{
+		font-size: 14px;
+	}
+	.main-items-page .item-price{
+		font-size: 14px;
+	}
+}
+@media screen and (max-width:500px) {
+	.main-items-page .items-list .item-title {
+		font-size: 13px;
+	}
+}
+
+
+.shipping-details{
+	font-family: 'Roboto', sans-serif;
+}
+.shipping-details .title {
+	font-size: 14px;
+}
+.shipping-details .sous-title {
+	font-size: 11px;
+}
+.shipping-details p{
+	font-size: 12px;
+	
+}
+.shipping-details .icon {
+	font-size: 23px;
+}
+
+
+  
+
+
+
+
+
+

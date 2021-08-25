@@ -1,0 +1,279 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:display=swap');
+
+* {
+  box-sizing: border-box;
+}
+.row{
+  width: 100%;
+  margin: auto;
+}
+
+  .header{
+    background-color: white;
+    box-shadow: 0px -2px 1px #aaa, 0px 2px 1px #aaa;
+  
+  }
+  .header a{
+    color: black;
+  }
+.header .logo-title{
+  font-size:70px;
+  letter-spacing: 10px;
+  color: burlywood;  
+  font-family: 'Great Vibes', 'cursive';
+  letter-spacing: 3vw;
+  text-align: center;
+
+}
+.title-bot{
+  font-size:60px;
+  color: burlywood;  
+  font-family: 'Great Vibes', 'cursive';
+  letter-spacing: 1vw;
+
+}
+.logo-subtitle{
+  font-family: 'Shippori Mincho', serif;
+  color:rgb(80, 79, 79);
+  font-size: 16px;
+  letter-spacing: 1px;
+  text-align: center;
+
+}
+
+
+.header-left{
+  color: #aaa;
+  font-family: 'Shippori Mincho', serif;
+}
+.header-right{
+  display: flex;
+}
+
+.header-right a{
+  color: #000;
+  font-size: 20px;
+  font-family: 'Shippori Mincho', serif;
+}
+.header-right .options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+
+@media screen and (max-width: 768px){
+  .header{
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+  }
+  .header-left{
+    background-color: burlywood;
+    color: black;
+    width: 100%;
+  }
+  .product-display {
+    border: none;
+    box-shadow: none;
+  }
+  .page-products{
+    border: none;
+    box-shadow: none;
+  }
+}
+
+@media screen  and (max-width:992px) {
+  .navBar{
+    display: none;
+  }
+  .header-right{
+    padding-bottom: 15px;
+  }
+}
+@media screen and (min-width:992px) {
+  .menu_phone{
+    display: none;
+  }
+  .header-right{
+    justify-content: end;
+    align-items: center;
+    float: right;
+  }
+}
+
+.navBar{
+  position: relative;
+
+}
+
+.main-navBar {
+
+  padding-left: 85px;
+  padding-right: 85px;
+  background-color: burlywood;
+  border: 1px solid black;
+
+
+ 
+}
+.main-navBar li {
+  color: black;
+  margin-left: 5px;
+}
+.main-navBar a {
+  font-size: 16px;
+  font-family: Centaur,serif;
+  font-weight: 700;
+  position: relative;
+
+}
+.main-navBar  span {
+  position: relative;
+  bottom:1px;
+}
+
+.main-navBar-customization{
+  position: relative;
+}
+
+.customization-dropdown{
+  position: absolute;
+  background-color: white;
+
+}
+.customization-dropdown  {
+  -webkit-box-shadow:  0px 5px 8px rgba(0, 0, 0, 0.3);
+  -khtml-box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.3);
+  box-shadow:  0px 5px 8px rgba(0, 0, 0, 0.3);
+  min-height: 300px;
+  background-color: white;
+  position: absolute;
+  z-index: 1001;
+  width: 300px;
+  top: 36px;
+  left: -25px;
+  right: 0;
+}
+.customization-dropdown  {
+  width: 300px;
+  margin: 0;
+  padding: 0;
+}
+.customization-dropdown  li {
+  display: block;
+  padding: 0px;
+
+}
+.customization-dropdown li:hover  {
+  background-color: #ddd;
+ 
+}
+.customization-dropdown  a {
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Open Sans', sans-serif;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 5px;
+  margin: 0px; display: block; width: 100%; height: 100%;
+}
+
+
+
+.dropdown{
+  position: absolute;
+  width: 100%;
+  z-index: 1001;
+ 
+  top: 45px;
+}
+
+.dropdown > div {
+  -webkit-box-shadow:  0px 5px 8px rgba(0, 0, 0, 0.3);
+  -khtml-box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.3);
+  box-shadow:  0px 5px 8px rgba(0, 0, 0, 0.3);
+  min-height: 300px;
+}
+
+.dropdown  ul li {
+  display: block;
+  width: 100%;
+}
+
+.dropdown .main-list  li  {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left:10px;
+  padding-right:10px;
+}
+.dropdown .main-list a {
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Open Sans', sans-serif;
+  margin: 0px; display: block; width: 100%; height: 100%;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 5px;
+  
+}
+
+.dropdown .main-list  li:hover  {
+  background-color: #ddd;
+ 
+}
+.dropdown-content {
+  border-left: 1px solid #ddd;
+}
+.dropdown-content .title {
+  font-size: 22px;
+  font-weight: 600;
+  font-family: Centaur,serif;
+
+
+}
+
+.dropdown-content .title:hover {
+  text-decoration: underline;
+}
+.dropdown-content .second-list  a {
+  font-size: 16px;
+  color: rgb(80, 79, 79);
+  font-family: Centaur,serif;
+
+}
+.dropdown-content .second-list  a:hover{
+  text-decoration: underline;
+}
+.dropdown-content img {
+  max-height: 250px;
+  display: block;
+  margin: auto;
+}
+.dropdown-content .img-label{
+  font-family: Centaur,serif;
+  font-size: 19px;
+
+}
+/***************************************************/
+
+
+.underline > a:after {    
+  background: none repeat scroll 0 0 transparent;
+  bottom: 0;
+  content: "";
+  display: block;
+  height: 2px;
+  left: 50%;
+  position: absolute;
+  background: black;
+  transition: width 0.3s ease 0s, left 0.3s ease 0s;
+  width: 0;
+  top: 20px;
+}
+.active a:after { 
+  width: 100%; 
+  left: 0; 
+}

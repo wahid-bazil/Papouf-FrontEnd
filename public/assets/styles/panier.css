@@ -1,0 +1,137 @@
+* {
+    box-sizing: border-box;
+  }
+
+
+.cart-drawer {
+min-width: 200px;
+height: 100vh;
+position: relative;
+
+}
+.cart-drawer > div {
+  position: relative;
+  height: 100vh;
+}
+.cart-drawer .cart-items {
+  height: 80%;
+  overflow-x: hidden;
+}
+.cart-drawer .title{
+  font-family: "Open Sans",sans-serif;
+  color: black;
+  font-size: 20px;
+}
+.cart-drawer .btn-close {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.cart-drawer .cart-total {
+ border-top: 5px solid black;
+ height: 20%;
+}
+.cart-drawer .cart-subtitle {
+  font-family: "Open Sans",sans-serif;
+  color: black;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.cart-drawer .cart-total .btn {
+  background-color: burlywood;
+  font-family: "Open Sans",sans-serif;
+}
+.pack-details  {
+  align-items: center;
+  justify-content: center;
+}
+.cart-drawer .item-img img {
+  width: 90%;
+  padding-top: 5px  ;
+}
+
+
+@media screen and (max-width:350px){
+  .cart-drawer .item-price {
+    font-size: 16px;
+  }
+  .cart-drawer .item-title {
+    font-size: 14px;
+  }
+  .cart-drawer .cart-subtitle .item-price {
+    font-size: 18px;
+  }
+}
+@media screen and (min-width:350px){
+  .cart-drawer .item-price {
+    font-size: 19px;
+  }
+  .cart-drawer .item-title {
+    font-size: 17px;
+    
+  }
+  .cart-drawer .cart-subtitle .item-price {
+    font-size: 22px;
+  }
+
+}
+
+
+.cart-drawer .panier_bot{
+    height: 30%;
+    border-top: solid #aaa 2px;
+    box-shadow: 0 0 2px #aaa;
+  
+}
+.cart-drawer .panier_list{
+    height: 70%;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+
+.annimation:first-child{
+  animation-name: example;
+  animation-duration: 2s;
+}
+@keyframes example {
+  
+  0%   {background-color: white}
+  25%  {background-color: rgb(214, 188, 153);
+              }
+  50%  {background-color: white;transform: scale(1)}
+  100% {background-color: rgb(221, 191, 152);};
+   
+}
+
+.cart-drawer .panier_bot{
+  height: 30%;
+  border-top: solid #aaa 2px;
+  box-shadow: 0 0 2px #aaa;
+
+}
+.cart-drawer .panier_list{
+  height: 70%;
+  overflow: auto;
+  overflow-x: hidden;
+}
+.cart-bot-side {
+  border-top: 2px solid #aaa;
+}
+
+.cart-drawer .btn-blury{
+  background-color: burlywood;
+}
+ .pack-details img {
+  width: 90%;
+}
+.pack-details {
+  font-family: 'Dancing Script', cursive;
+  font-size: 23px;
+}
+.pack-details .loader {
+  width: 100px;
+  height: 100px;
+}
+
+

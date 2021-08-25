@@ -1,0 +1,372 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Markazi+Text:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=STIX+Two+Text&display=swap');
+
+* {
+    box-sizing: border-box;
+  }
+  div
+{
+	-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.acceuil {
+	border-radius: 3px;	
+}
+.carousel-title{	
+	color: black;
+	font-size: 25px;	
+}
+.carousel-img1 {
+	width: 100%;
+}
+.carousel-img2{
+	width: 100%;
+}
+.carousel-next-icon{
+	transition: .5s ease;
+  	position: relative;
+	font-size: 35px;
+	color: rgb(253, 251, 244);	
+}
+.carousel-prev-icon{
+	transition: .5s ease;
+	position: relative;
+	font-size: 35px;
+
+}
+.Carousel-button {
+	height: 100px;
+  	position: relative;
+}
+.Carousel-button div {
+	margin: 0;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+
+}
+.acceuil-center-title{
+	font-family: 'Shippori Mincho', serif;
+	letter-spacing: 1px;
+	font-size: 19px;
+	color: black;
+	text-align: center;
+}
+.acceuil .services-description{
+	border-radius: 3px;
+	padding: 0px;
+	font-family: 'Ubuntu', sans-serif;
+	font-weight: bold;
+	
+}
+
+.acceuil .services-description i{
+	font-size: 35px;
+}
+
+.acceuil .products-catagories-area {
+	margin: auto;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 calc(100% - 320px);
+    flex: 0 0 calc(100% - 320px);
+    width: calc(100% - 320px);
+    max-width: calc(100% - 320px); }
+
+.social-media{
+	display: flex;
+	justify-content: space-around;
+	margin: auto;
+	
+}
+.social-media a{
+	padding: 15px;
+	border-radius:100%;
+	
+}
+.fa-facebook {
+	background: #3B5998;
+	color: white;
+	
+  }
+  .fa-instagram {
+	background: #125688;
+	color: white;
+  }
+ 
+  .fa-twitter {
+	background: #55ACEE;
+	color: white;
+  }
+ .acceuil .about-us img{
+	 width: 100%;
+ } 
+.acceuil .about-us h1 {
+	font-family: 'Markazi Text', serif;
+}
+@media screen and (max-width:350px){
+    .acceuil .container{
+        padding: 0;
+    }
+}
+@media screen and (max-width:768px) {
+	.carousel-img1 {
+	
+		content: url("../images/acceuil.jpg");
+		
+	}
+	.carousel-img2 {
+		content: url("../images/acceuil.jpg");
+		
+	}
+	.acceuil > .row {
+	flex-direction: column-reverse;
+	}
+	.acceuil .services-description {
+		margin-top: 25px;
+	}
+	.acceuil .products-catagories-area {
+		-webkit-box-flex: 0;
+		-ms-flex: 0 0 100%;
+		flex: 0 0 100%;
+		width: 100%;
+		max-width: 100%; 
+	}
+	.collections-description .hover-content .title{
+		color: black;
+		font-size: 16px;
+		font-family: 'Shippori Mincho', serif;
+		text-align: center;
+		margin-top: 0px;
+
+	}
+	.collections-description .hover-content .subtitle{
+		color: rgb(51, 51, 51);
+		font-family: 'Shippori Mincho', serif;
+		text-align: center;
+		font-size: 12px;
+		margin-top: 8px;
+	}
+	.acceuil  .carousel-content .text {
+		text-align: center;
+		margin-top: 15px;
+		font-family: 'Shippori Mincho', serif;
+		
+
+	}
+	.service-description-dot{
+	display: inline-block;
+	border-radius: 100%;
+
+	}
+	.acceuil .carousel-content .text .btn {
+		margin-top: 15px;
+		border-radius: 0%;
+		padding-top: 12px;
+		padding-bottom: 12px;
+		padding-left: 20px;
+		padding-right: 20px;
+		background-color: burlywood;
+		box-shadow: 0 0 1px white;
+		background-color: 2px;
+	}
+	
+
+}
+@media screen and (min-width :768px) {
+	.carousel-img1 {
+		content: url("../images/acceuil.jpg");
+	}
+	.carousel-img2 {
+		content: url("../images/acceuil.jpg");
+	}
+	.acceuil  .carousel-content .text {
+		opacity: 1;
+		position: absolute;
+		top: 0px;
+		right: 0;
+		text-align: center;
+		padding: 25px;
+		font-family: 'STIX Two Text', serif;
+	}
+	.service-description-dot{
+		display: none;
+	}
+	.acceuil .carousel-content .text .btn {
+		border-radius: 0%;
+		padding-top: 12px;
+		padding-bottom: 12px;
+		padding-left: 20px;
+		padding-right: 20px;
+		background-color: white;
+		box-shadow: 0 0 1px white;
+		background-color: 2px;
+	}
+}
+@media screen and (max-width:768px) {
+	.acceuil .carousel-content .title {
+		font-size: 20px;
+		padding-bottom: 5px;
+	}
+	.acceuil .carousel-content .subtitle {
+		font-size: 12px;
+	}
+	.acceuil  .ribbon-customization {
+		font-size: 15px;
+		letter-spacing: 0px;
+	}
+}
+@media screen and (min-width:768px) {
+	.acceuil .carousel-content .title {
+		font-size: 23px;
+		padding-bottom: 10px;
+	}
+	.acceuil .carousel-content .subtitle {
+		font-size: 14px;
+		padding-bottom: 10px;
+	}
+	.acceuil  .ribbon-customization {
+		font-size: 18px;
+		letter-spacing: 1px;
+	}
+	
+}
+
+@media screen and (min-width :768px)  and (max-width :991px) {
+	.collections-description .hover-content .title{
+		color: black;
+		font-size: 20px;
+		
+		text-align: center;
+
+	}
+	.collections-description .hover-content .subtitle{
+		color: rgb(51, 51, 51);
+		
+		text-align: center;
+	}
+
+}
+@media screen and (min-width:578px) and (max-width :992px) {
+	.acceuil .container{
+        padding: 25px;
+		
+		box-shadow: 0 0 5px #aaa;
+		margin-top: 15px;
+	}
+}
+@media screen and (min-width :992px) {
+	.collections-description .hover-content{
+		position: absolute;
+		top: 15px;
+		left: 15px;
+	}
+	.collections-description .hover-content .title{
+		color: black;
+		font-size: 20px;
+		
+		margin-top: 10px;
+	}
+	.collections-description .hover-content .subtitle{
+		color: rgb(51, 51, 51);
+	
+	}
+}
+
+
+
+/****************/
+
+.carousel .carousel-content{
+	position: relative;
+}
+
+.acceuil .carousel-content .title {
+	text-shadow: 0 0 15px white;
+	color:black;
+	font-weight: 100;
+}
+.acceuil .carousel-content .subtitle {
+	
+	text-shadow: 0 0 15px white;
+	color:black
+}
+
+.acceuil .featured-products img {
+	width: 100%;
+}
+.acceuil .collections-description img {
+	width: 100%;
+}
+.acceuil .single-collection .hover {
+	background-color: black;
+}
+.acceuil .single-collection .hover img {
+	transition: .5s ease;
+}
+.acceuil .single-collection:hover .hover img{
+	opacity: 0.5
+}
+/* Services Description */
+.services-description{
+}
+.single-service {
+	font-family: 'Shippori Mincho', serif;
+	font-weight: 300;
+	margin-bottom: 10px;
+	
+}
+.service-icon{
+	font-size: 33px;
+
+}
+
+.services-description > div {
+	padding: 0px;
+	
+}
+
+.acceuil .item-title {
+	font-size: 17px;
+}
+.acceuil .item-price {
+	font-size: 17px;
+}
+.acceuil  .ribbon-customization {
+    width: max-content;
+    height: 25px;
+    line-height: 25px;
+    position: absolute;
+	padding-left: 2px;
+	padding-right: 2px;
+    left: 15px;
+    top: 0px;
+    background: burlywood;
+    color: black;
+	font-weight: 600;
+
+	font-family: Centaur,serif;
+	
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

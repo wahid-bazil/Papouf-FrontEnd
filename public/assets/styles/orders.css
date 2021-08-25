@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Markazi+Text&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@media screen and (min-width:768px) {
+    .order-page{
+        box-shadow: 0 0 2px #aaa;
+        border-radius: 5px;
+    }
+
+}
+
+
+
+.orders-drawer .loader {
+    width: 120px;
+    height: 120px;
+}
+.orders-drawer .orders-list .details { 
+    position: relative;
+    left: 35%;
+    bottom: -15px;
+    z-index: 5px;
+}
+.orders-list h6 span {
+    color: burlywood;
+    font-weight: 700;
+}
+.cart-list img{
+    width: 100%;
+    
+}
+/*  take this away */
+
+.item-title {
+    font-family: 'Source Sans Pro', sans-serif;
+    color: rgba(77, 76, 76, 0.986);
+   
+}
+.item-quantity {
+    font-family: 'Source Sans Pro', sans-serif;
+    color: rgba(77, 76, 76, 0.986);
+   
+}
+.item-price {
+    font-family: 'EB Garamond', serif;
+    font-weight: 600;
+    color: black;
+ 
+}
+.item-promo {
+    font-family: 'EB Garamond', serif;
+    font-weight: 400;
+    color: black;
+    text-decoration: line-through;
+}
+
+.item-promo::after{
+
+  } 
+.error{
+    color: rgba(223, 37, 37, 0.6);
+    font-size: 12px;
+
+}
+
+.order-page {
+    min-height: 500px;
+}
+.Accordion-Summary {
+    background-color: white;
+}
+ .Accordion-Summary span {
+    font-size: 25px;
+  
+}
+.orders-list{
+    border: solid 2px #aaa;
+  
+}
+.order-page h5 span {
+    color: rgb(224, 142, 34);
+    font-weight: 400;
+    
+    
+}
+.order-page h5 {
+    font-family: 'EB Garamond', serif;
+    font-weight: 600;
+   
+}
+
+.order-page .livraison-info {
+    border: solid 2px #aaa;
+    box-shadow: 0 0 2px #aaa;
+}
+.order-page .livraison-info .details{
+    position: relative;
+    bottom: -25px;
+}
+.order-page .payment-info {
+    border: solid 2px #aaa;
+    box-shadow: 0 0 2px #aaa;
+}
+.order-page .payment-info  .details{
+    position: relative;
+    top :45px;
+}
+.order-page .loader {
+    width: 120px;
+    height: 120px;
+}
+@media screen and (max-width:350px) {
+    .order-page .cart-list  .row > div{
+        padding:0px ;
+      }
+}
+@media only screen and (min-width: 351px) and (max-width: 768px) {
+    .order-page .cart-list  .row > div{
+        padding:10px ;
+      }
+}
+
+@media screen and (min-width:769px) {
+    .order-page .cart-list  .row > div{
+        padding:8px ;
+      }
+    .Accordion-Summary {
+        display: none;
+    }  
+}
+
+

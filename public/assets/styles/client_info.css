@@ -1,0 +1,77 @@
+*:focus {
+    outline: 0 !important;
+}
+.title-screen {
+    color: black;
+    font-family: 'Shippori Mincho', serif;
+}
+
+
+
+
+
+
+
+  .btn1 {
+    border: none;
+    background-color: transparent;
+
+    font-size: 25px;
+    cursor: pointer;
+    outline: none;
+}
+ 
+
+
+
+
+
+
+/* """"" */
+
+.client-info-drawer{
+    font-family: 'Shippori Mincho', serif;
+}
+
+.client-info-drawer .inputIcon{
+    background-color:burlywood;
+   
+    font-size: 20px;
+}
+.client-info-drawer .edited i{
+    position: relative;
+    top: 5px;
+}
+.client-info-drawer .topSection .btn-null{
+    font-size: 25px;
+}
+.client-info-drawer .botSection .btn-null{
+    font-size: 30px;
+}
+.topSection >div{
+    border: solid 1px #aaa;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.topSection .input{
+    padding: 5px;
+   
+}
+.create-account{
+ 
+    box-shadow: 0 0 3px #aaa;
+    color: black;
+}
+.create-account  {
+    color: burlywood;
+
+}
+.create-account .icon-create-account{
+    position: relative;
+    top :-2px;
+    font-size: 20px;
+}
+.botSection i {
+    font-size: 25px;
+}
