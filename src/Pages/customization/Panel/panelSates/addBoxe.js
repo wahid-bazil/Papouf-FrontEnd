@@ -39,9 +39,7 @@ class AddBoxe extends Component {
         }
     }
     async componentDidMount() {
-
-        const boxes = await axiosInstance.get(`api/variation/boxe`)
-      
+        const boxes = await axiosInstance.get(`api-categories/article/category-items/boxes`)
         this.setState({
             boxes: boxes.data,
             filtredBoxes:boxes.data,
@@ -52,7 +50,7 @@ class AddBoxe extends Component {
             this.props.annimatePanelLabel();
             this.props.showPanelData();
         })
-        axiosInstance.get(`api/images/boxe`)
+        axiosInstance.get(`api-images/article/category-items/boxes`)
             .then((res) => {
                 this.setState({
                     boxesImages: res.data,
@@ -138,10 +136,10 @@ class AddBoxe extends Component {
 
     get_boxeImages = (boxe_id) => {
         const boxesImages = this.state.boxesImages
-        let indexOf_boxe_images = boxesImages.findIndex(element => element.boxe_id === boxe_id)
+        let indexOf_boxe_images = boxesImages.findIndex(element => element.item_id === boxe_id)
         let images = [];
         boxesImages[indexOf_boxe_images]?.images.forEach(element => {
-            images.push(element.image)
+            images.push(element)
         });
         return images
     }

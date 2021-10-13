@@ -20,8 +20,6 @@ class LogIn extends Component {
       name: "",
       second_name: "",
       phone_number: "",
-      inSignUp: false,
-      is_user_created: false,
       isSubmitting: false,
       is_email_err: false,
       is_name_err: false,
@@ -30,44 +28,18 @@ class LogIn extends Component {
       is_password_err: false,
       is_password_login_err: false,
       err_login: null,
-      err_signup: null,
-      email_err: null,
-      name_err: null,
-      second_name_err: null,
-      phone_number_err: null,
-      password_err: null,
       email_login_err: null,
       password_login_err: null
 
     };
     this.onChange = this.onChange.bind(this);
-
-
-
-
   }
 
-  componentDidMount() {
-
-
-  }
   handleClick = () => {
-
-
     this.props.history.push({
       pathname: './sign-up'
-
     })
-
-
-
-
-
-
   }
-
-
-
 
   Login = (e) => {
     this.setState({ isSubmitting: true })
@@ -95,7 +67,7 @@ class LogIn extends Component {
       };
       console.log(user)
       axios
-        .post("https://papouf-backend-api.herokuapp.com/api/user/login/", user,
+        .post("https://papouf-backend-api.herokuapp.com/api-user/log-in/", user,
           {
             headers: {
               Accept: "application/json",
@@ -104,7 +76,6 @@ class LogIn extends Component {
           }
         )
         .then((res) => {
-
           localStorage.setItem('access_token', res.data.tokens.access);
           localStorage.setItem('refresh_token', res.data.tokens.refresh);
 
@@ -115,13 +86,15 @@ class LogIn extends Component {
           if (location === 'checkout') {
             this.props.history.push("/checkout");
           } else {
-            this.props.history.push("/Acceuil");
+            this.props.history.push("/");
           }
 
         })
 
         .catch((err) => {
-          this.setState({ err_login: err.response.data.error, isSubmitting: false })
+          this.setState({ err_login: err.response.data.detail[0], isSubmitting: false },()=>{
+          })
+          
         });
     }
   }
@@ -130,10 +103,10 @@ class LogIn extends Component {
   }
 
   render() {
-    const { name_err, second_name_err, phone_number_err, email_err, password_err, email_login_err, password_login_err } = this.state
-    const { is_name_err, is_second_name_err, is_phone_number_err, is_email_err, is_password_err, is_email_login_err, is_password_login_err } = this.state
-    const { err_login, err_signup, isSubmitting } = this.state
-    const { inSignUp } = this.state
+    const { email_login_err, password_login_err ,err_login } = this.state
+    const { is_email_login_err, is_password_login_err } = this.state
+    const { isSubmitting } = this.state
+
 
     return (
       <div className="  main0  pt-5">

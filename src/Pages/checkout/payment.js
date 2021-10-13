@@ -1,26 +1,15 @@
 import React, { Component } from "react";
 
 
-import queryString from 'query-string';
-
-
-import { HiOutlineChevronRight } from "react-icons/hi";
 import axiosInstance from "../auth/axios"
 import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
+
 import AccordionDetails from '@material-ui/core/AccordionDetails';
-import Typography from '@material-ui/core/Typography';
 
-import { FaShippingFast } from 'react-icons/fa';
 
-import { BiSupport } from 'react-icons/bi';
-import { GiReceiveMoney } from 'react-icons/gi';
-import { IconContext } from "react-icons";
+
 import { GrFormDown } from 'react-icons/gr';
-import { HiOutlineMail } from 'react-icons/hi';
-import { RiUser3Fill } from 'react-icons/ri';
-import { MdLocalPhone } from 'react-icons/md';
-import { FaShoppingCart } from 'react-icons/fa';
+
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
@@ -57,8 +46,8 @@ class Payment extends Component {
             expanded: false,
             height: 0,
             width: 0,
-            modeShipping: 'Livraison standard',
-            modePayment: 'Paiement à la livraison',
+            modeShipping:  { value: 'Standard', label: ' Livraison Standard' },
+            modePayment: { value: '	cashondelivery', label: ' Paiement à la livraison' },
             delay: null,
             cost: null,
             isDataSaving: false,
@@ -83,11 +72,10 @@ class Payment extends Component {
         window.scrollTo(0, 0);
         this.update();
         if (this.props.location.state?.modeShipping) {
-            const modeShipping = this.props.location.state?.modeShipping;
             try {
                 const [firstResponse, secondResponse] = await Promise.all([
-                    axiosInstance.get('api/user/detail'),
-                    axiosInstance.get('api/cart/detail'),
+                    axiosInstance.get('api-user/details'),
+                    axiosInstance.get('api-cart/'),
                 ]);
                 if (firstResponse.data.address_details == null || firstResponse.data.address_details == undefined) {
                     this.props.history.push("./checkout");
@@ -96,21 +84,20 @@ class Payment extends Component {
                     this.props.history.push("./Acceuil")
                 }
                 else {
-                    const thirdResponse = await axiosInstance.post('api/delivery/delay-cost',
+                    const thirdResponse = await axiosInstance.post('api-delivery/delay-cost',
                         {
-                            city: firstResponse.data.address_details.city.title,
-                            shipping_mode: modeShipping,
-                            total :secondResponse.data.subtotal
+                            city: firstResponse.data.address_details.city,
+                            shipping_mode: this.state.modeShipping.value,
+                            order_total :secondResponse.data.subtotal
                         })
                     this.setState({
                         name: firstResponse.data.name,
                         second_name: firstResponse.data.second_name,
                         phone_number: firstResponse.data.phone_number,
-                        address: firstResponse.data.address_details.address,
-                        city: firstResponse.data.address_details.city.title,
+                        address: firstResponse.data.address_details.details,
+                        city: firstResponse.data.address_details.city,
                         cartitems: secondResponse.data.cartitems,
                         subtotal: secondResponse.data.subtotal,
-                        modeShipping: modeShipping,
                         delay: thirdResponse.data.delay_per_hour,
                         cost: thirdResponse.data.shipping_price,
                         isUserInfoLoading: false,
@@ -118,7 +105,7 @@ class Payment extends Component {
                         isCartImagesLoading: true,
                         isDataLoading: false
                     })
-                    axiosInstance.get(`api/images/cartitems`)
+                    axiosInstance.get(`api-images/cartitems`)
                         .then((res) => {
                             this.setState({
                                 cartitemsImages: res.data,
@@ -128,7 +115,7 @@ class Payment extends Component {
                 }
             }
             catch {
-                console.log('catch')
+                
             }
         }
         else {
@@ -142,7 +129,7 @@ class Payment extends Component {
         let indexOf_cartitem_images = this.state.cartitemsImages.findIndex(element => element.cartitem_images.item_id === item_id);
         let images = [];
         this.state.cartitemsImages[indexOf_cartitem_images]?.cartitem_images?.images.forEach(element => {
-            images.push(element.image)
+            images.push(element)
         });
         return images
     }
@@ -150,7 +137,10 @@ class Payment extends Component {
         this.setState({ isDataSaving: true })
         this.props.history.push({
             pathname: '/validation',
-            state: { modePayment: 'Paiement à la livraison' }
+            state: { 
+                modePayment: 'Paiement à la livraison',
+                modeShipping :this.state.modeShipping
+             }
         })
 
     }
@@ -233,7 +223,7 @@ class Payment extends Component {
                                         </div>
                                         <hr className="p-0 m-0" />
                                         <div className="pl-5 pt-2 pb-2">
-                                            <div className="text-700">{modeShipping}</div>
+                                            <div className="text-700">{modeShipping.label}</div>
                                             <div className=" "><span className="text-secondary text-shippori">Livré pendant : </span><span className="text-600 text-shippori">{delay}H </span><span className="text-shippori"> pour </span><span className="text-blury1 text-700 text-shippori">{cost}Dhs.</span></div>
                                         </div>
                                     </div>
@@ -268,7 +258,7 @@ class Payment extends Component {
                                                             labelPlacement="end"
 
                                                         />
-                                                        <label className="text-700">Paiement cash à la livraison  </label>
+                                                        <label className="text-700">Paiement à la livraison  </label>
 
 
                                                     </div>

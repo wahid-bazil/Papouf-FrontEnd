@@ -1,39 +1,17 @@
 import React, { Component } from "react";
-
-
-import queryString from 'query-string';
-
-
-import { HiOutlineChevronRight } from "react-icons/hi";
 import axiosInstance from "../auth/axios"
 import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
-import Typography from '@material-ui/core/Typography';
-
-import { FaShippingFast } from 'react-icons/fa';
-
-import { BiSupport } from 'react-icons/bi';
-import { GiReceiveMoney } from 'react-icons/gi';
-import { IconContext } from "react-icons";
 import { GrFormDown } from 'react-icons/gr';
-import { HiOutlineMail } from 'react-icons/hi';
-import { RiUser3Fill } from 'react-icons/ri';
-import { MdLocalPhone } from 'react-icons/md';
-import { FaShoppingCart } from 'react-icons/fa';
 import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Radio from '@material-ui/core/Radio';
-import { VscAccount } from "react-icons/vsc";
 import Badge from '@material-ui/core/Badge';
 import { GrFormUp } from 'react-icons/gr';
 import IconButton from '@material-ui/core/IconButton';
-import FormControl from '@material-ui/core/FormControl';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import {FcCheckmark} from 'react-icons/fc';
+import { FcCheckmark } from 'react-icons/fc';
 
 
 class Validation extends Component {
@@ -61,13 +39,13 @@ class Validation extends Component {
             expanded: false,
             height: 0,
             width: 0,
-            modeShipping: 'Livraison standard',
+            modeShipping: { value: 'Standard', label: ' Livraison Standard' },
             modePayment: 'Paiement à la livraison',
             delay: null,
             cost: null,
             isDataSaving: false,
             isDataLoading: true,
-            isDialogOpen:false
+            isDialogOpen: false
         }
         this.continue = this.continue.bind(this)
     }
@@ -86,54 +64,54 @@ class Validation extends Component {
     };
     async componentDidMount() {
 
-        if (this.props.location.state?.modePayment) {
+        if (this.props.location.state?.modePayment && this.props.location.state?.modeShipping) {
             const modePayment = this.props.location.state?.modePayment;
             try {
                 const [firstResponse, secondResponse] = await Promise.all([
-                    axiosInstance.get('api/user/detail'),
-                    axiosInstance.get('api/cart/detail'),
+                    axiosInstance.get('api-user/details'),
+                    axiosInstance.get('api-cart/'),
                 ]);
                 if (firstResponse.data.address_details == null || firstResponse.data.address_details == undefined) {
                     this.props.history.push("./checkout");
                 }
-                else if (secondResponse.data.cartitems.length===0){
+                else if (secondResponse.data.cartitems.length === 0) {
                     this.props.history.push("./Acceuil")
                 }
-                else{
-                    const thirdResponse = await axiosInstance.post('api/delivery/delay-cost',
-                    {
-                        city: firstResponse.data.address_details.city.title,
-                        shipping_mode: this.state.modeShipping,
-                        total :secondResponse.data.subtotal
-                    })
-                this.setState({
-                    name: firstResponse.data.name,
-                    second_name: firstResponse.data.second_name,
-                    phone_number: firstResponse.data.phone_number,
-                    address: firstResponse.data.address_details.address,
-                    city: firstResponse.data.address_details.city.title,
-                    cartitems: secondResponse.data.cartitems,
-                    subtotal: secondResponse.data.subtotal,
-                    modePayment: modePayment,
-                    delay: thirdResponse.data.delay_per_hour,
-                    cost: thirdResponse.data.shipping_price,
-                    isUserInfoLoading: false,
-                    isCartInfoLoading: false,
-                    isCartImagesLoading: true,
-                    isDataLoading: false
-                })
-                window.scrollTo(0, 0);
-                this.update();
-                axiosInstance.get(`api/images/cartitems`)
-                    .then((res) => {
-                        this.setState({
-                            cartitemsImages: res.data,
-                            isCartImagesLoading: false
+                else {
+                    const thirdResponse = await axiosInstance.post('api-delivery/delay-cost',
+                        {
+                            city: firstResponse.data.address_details.city,
+                            shipping_mode: this.state.modeShipping.value,
+                            order_total: secondResponse.data.subtotal
                         })
+                    this.setState({
+                        name: firstResponse.data.name,
+                        second_name: firstResponse.data.second_name,
+                        phone_number: firstResponse.data.phone_number,
+                        address: firstResponse.data.address_details.details,
+                        city: firstResponse.data.address_details.city,
+                        cartitems: secondResponse.data.cartitems,
+                        subtotal: secondResponse.data.subtotal,
+                        modePayment: modePayment,
+                        delay: thirdResponse.data.delay_per_hour,
+                        cost: thirdResponse.data.shipping_price,
+                        isUserInfoLoading: false,
+                        isCartInfoLoading: false,
+                        isCartImagesLoading: true,
+                        isDataLoading: false
                     })
+                    window.scrollTo(0, 0);
+                    this.update();
+                    axiosInstance.get(`api-images/cartitems`)
+                        .then((res) => {
+                            this.setState({
+                                cartitemsImages: res.data,
+                                isCartImagesLoading: false
+                            })
+                        })
 
                 }
-     
+
 
             }
             catch {
@@ -151,71 +129,67 @@ class Validation extends Component {
         let indexOf_cartitem_images = this.state.cartitemsImages.findIndex(element => element.cartitem_images.item_id === item_id);
         let images = [];
         this.state.cartitemsImages[indexOf_cartitem_images]?.cartitem_images?.images.forEach(element => {
-            images.push(element.image)
+            images.push(element)
         });
         return images
     }
     async continue() {
-        this.setState({isDataSaving:true})
+        this.setState({ isDataSaving: true })
         const modePayment = this.state.modePayment
         const modeShipping = this.state.modeShipping
-        try {
-            const [firstResponse, secondResponse] = await Promise.all([
-                axiosInstance.post('api/order/list',
-                    {
-                        shipping_mode: modeShipping,
-                        total:parseInt(this.state.subtotal) + parseInt(this.state.cost),
-                        delay:this.state.delay,
-                        cost:this.state.cost,
-                        //payment_mode: modePayment
-                    }
-                )
-                .then((res)=>{
-                    this.setState({isDataSaving:false,isDialogOpen:true})
 
-                })
-            ]);
-            /*if (modePayment === 'OnlinePayment') {
+        axiosInstance
+            .post('api-order/list',
+                {
+                    shipping_mode: "standard",
+                    payment_mode: "cashondelivery"
+                }
+            )
 
-            }
-            else if (modePayment === 'Paiement à la livraison') {
-                //this.props.history.push("/Acceuil");
 
-            }*/
-        }
-        catch {
+            .then((res) => {
+                this.setState({ sDataSaving: false, isDialogOpen: true })
+            })
+
+
+
+        //this.setState({isDataSaving:false,isDialogOpen:true})
+        /*if (modePayment === 'OnlinePayment') {
 
         }
+        else if (modePayment === 'Paiement à la livraison') {
+            //this.props.history.push("/Acceuil");
 
+        }*/
     }
     handleAccordionDetails = () => {
         this.setState({ expanded: !this.state.expanded })
     }
 
     render() {
-        const { cartitems, subtotal, expanded, isDataLoading ,isDialogOpen} = this.state
+        const { cartitems, subtotal, expanded, isDataLoading, isDialogOpen } = this.state
         const { name, second_name, phone_number, address, city, modeShipping, modePayment, delay, cost } = this.state
         const { isUserInfoLoading, isCartInfoLoading, isCartImagesLoading, isDataSaving } = this.state
         return (
 
             <div className="checkout ">
                 <Dialog
-                  className="dialog-content"
-                  fullWidth
+                    className="dialog-content"
+                    fullWidth
 
-                  style={{ position: 'fixed', zIndex: 4001, padding: 0, background: "transparent" }}
-                  open={isDialogOpen}
-                  fullWidth={true}
-                  aria-labelledby="max-width-dialog-title"
-              >
-                   <DialogContent>
-                    <div className="success">
-                        <span><FcCheckmark className="icon"/></span>
-                        <div className="text-secondary ">Votre commande a été créée avec succès</div>
+                    style={{ position: 'fixed', zIndex: 4001, padding: 0, background: "transparent" }}
+                    open={isDialogOpen}
+                    fullWidth={true}
+                    aria-labelledby="max-width-dialog-title"
+                >
+                    <DialogContent>
+                        <div className="success">
+                            <span><FcCheckmark className="icon" /></span>
+                            <div className="text-secondary ">Votre commande a été créée avec succès, vous recevrez dans les prochaines heures un appel de notre part pour vérifier la commande </div>
 
-                    </div>
-                   </DialogContent>
-                   <DialogActions><button className="btn btn-primary" onClick={()=> this.props.history.push("/Acceuil")}>Terminer</button></DialogActions>
+                        </div>
+                    </DialogContent>
+                    <DialogActions><button className="btn btn-primary" onClick={() => this.props.history.push("/")}>Terminer</button></DialogActions>
 
                 </Dialog>
                 {isDataLoading ? (
@@ -262,7 +236,7 @@ class Validation extends Component {
                                         </div>
                                         <hr className="p-0 m-0" />
                                         <div className="pl-5 pt-2 pb-2">
-                                            <div className="text-700">{modeShipping}</div>
+                                            <div className="text-700">{modeShipping.label}</div>
                                             <div className=" "><span className="text-secondary text-shippori">Livré pendant : </span><span className="text-600 text-shippori">{delay}H </span><span className="text-shippori"> pour </span><span className="text-blury1 text-700 text-shippori">{cost}Dhs.</span></div>
                                         </div>
                                     </div>
@@ -294,7 +268,7 @@ class Validation extends Component {
                                             </div>
                                         </div>
 
-                                        <button className="btn  col-12 p-2" onClick={this.continue}>{isDataSaving ? (<CircularProgress />) : 'VALIDER'}</button>
+                                        <button className={isDataSaving ? 'btn  col-12 p-2 avoid-click' : 'btn  col-12 p-2'} onClick={this.continue}>{isDataSaving ? (<CircularProgress />) : 'VALIDER'}</button>
                                     </div>
 
                                 </div>

@@ -1,17 +1,27 @@
 import React, { Component } from "react";
 import axiosInstance from "../auth/axios";
 import PackZone from "./packZone";
+
 import html2canvas from 'html2canvas';
+
 import PanelSates from "./Panel/panelSates/indexPanelStates";
+
+
 import { CSSTransition } from 'react-transition-group';
 import queryString from 'query-string';
 import { FcCheckmark } from 'react-icons/fc';
+import { IconButton } from "@material-ui/core";
 import { CgChevronDownO } from 'react-icons/cg';
-import { CgChevronUpO } from 'react-icons/cg';
-import IconButton from '@material-ui/core/IconButton';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import Typography from '@material-ui/core/Typography';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import Carousel from 'react-bootstrap/Carousel';
 import { IconContext } from "react-icons";
+import { CgChevronUpO } from 'react-icons/cg';
 
 
 
@@ -38,8 +48,15 @@ class Customization extends Component {
             quantity: 1,
             user_boxe: [],
             selectedPack: {
-                packitems: []
+                id: null,
+                packitems: [],
+                title: null,
+                sale_price: null,
+                userimages_nb: null,
+                isCopy: null
+
             },
+
             selectedPackUserImages: [],
             selectedPackOption: {},
             is_createBoxe_loading: false,
@@ -54,6 +71,7 @@ class Customization extends Component {
             uploadImage: false,
             idexImage: null,
             isDataloading: false,
+            showDetails: false,
             dialogOpen: false,
             //Panel States
             panelLabelannimated: false,
@@ -65,7 +83,6 @@ class Customization extends Component {
             articleCategories: [],
             //addArticle
             isArticleAdding: false,
-
             //packAone
             isPackDataLoading: false,
             isPackUserImageLoading: false,
@@ -82,13 +99,33 @@ class Customization extends Component {
                 }
             ],
             selectedPackItemsImages: [],
+
             screen: "",
             spaceLibre: 0,
             updateArticleFeedBack: null,
             updateBoxeFeedBack: null,
-            showDetails: false,
-            isEdidting:false
-
+            isEdidting: false,
+            image: null,
+            //final,
+            packarticles: [],
+            boxe: {
+                id: null,
+                item: {
+                    id: null,
+                    title: null,
+                    sale_price: null,
+                    description: null,
+                    type: null,
+                    space: null,
+                    child: [],
+                    variant_description: null
+                },
+                quantity: null,
+                total: null,
+                item_category: null
+            },
+            boxeImages: [],
+            articleImages: []
 
 
         }
@@ -108,83 +145,77 @@ class Customization extends Component {
         }
         )
     }
-    componentDidMount() {
+    async componentDidMount() {
         window.scrollTo(0, 0);
         this.setState({ isPackDataLoading: true }, async () => {
-            const pack_id = this.props.location.state?.pack_id
-            let selectedPack = {};
-            if (queryString.parse(this.props.location.search).pack_id) {
-                const pack_id = queryString.parse(this.props.location.search).pack_id
-                selectedPack = await axiosInstance.get(`api/customization/userCustomPack/${pack_id}`)
-                this.setState({isEdidting:true})
-                this.props.onChangeCustomPack(pack_id)
-            }
-            else {
-                selectedPack = await axiosInstance.get(`api/customization/userCustomPack/detail`)
-            }
+        console.log(this.props.location.state)
+        const pack_id = this.props.location.state?.pack_id
+        if (pack_id) {
+            const selectedPack = await axiosInstance.get(`api-customization/custompack/${pack_id}`)
 
-
+            let indexOf_boxe = selectedPack.data.packitems?.findIndex(element => element.item_category === 'Boxes');
+            let boxe = selectedPack.data.packitems[indexOf_boxe]
+            let packarticles = selectedPack.data.packitems
+            packarticles.splice(indexOf_boxe, 1)
             this.setState({
                 selectedPack: selectedPack.data,
+                boxe,
+                packarticles,
                 sale_price: parseInt(selectedPack.data.sale_price),
                 isPackDataLoading: false,
                 isPackUserImageLoading: true,
                 ispackBoxeImagesLoading: true,
                 isPackItemImageLoading: true
             }, async () => {
+
                 this.get_spaceLibre()
-                const boxe_id = this.state.selectedPack.boxe.id
-                const pack_id = this.state.selectedPack.id
+                let pack_id = this.state.selectedPack.id
 
-                try {
-                    const [packItemsImages, packUserImages, packBoxeImages] = await Promise.all([
-                        axiosInstance.get(`api/images/custompackarticle?id=${pack_id}`),
-                        axiosInstance.get(`api/images/userimages/custompack/${pack_id}`),
-                        axiosInstance.get(`api/images/boxe/${boxe_id}`)
-                    ])
-                    this.setState({
-                        selectedPackBoxeImages: packBoxeImages.data.images,
-                        selectedPackItemsImages: packItemsImages.data,
-                        selectedPackUserImages: packUserImages.data.userimages,
-                        idexImage: packUserImages.data.userimages.length - 1,
-                        isPackUserImageLoading: false,
-                        ispackBoxeImagesLoading: false,
-                        isPackItemImageLoading: false
+                axiosInstance.
+                    get(`api-images/custompack/${pack_id}`)
+                    .then((res) => {
+                        const boxe_id = this.state.boxe.item.id
+                        let indexOf_boxe = res.data.packitems_images?.findIndex(element => element.item_id === boxe_id);
+                        const boxeImages = res.data.packitems_images[indexOf_boxe]?.images
+                        this.setState({
+                            selectedPackItemsImages: res.data.packitems_images,
+                            boxeImages,
+                            isPackUserImageLoading: false,
+                            ispackBoxeImagesLoading: false,
+                            isPackItemImageLoading: false
+                        })
+
                     })
-
-                }
-                catch {
-
-                }
             })
-        })
+        }
+        else {
+
+        }
+    })
+
     }
-
-
     async changeBoxe(boxe) {
-
         this.setState({ ispackBoxeImagesLoading: true }, async () => {
             let spaceUsed = 0
             this.state.selectedPack.packitems.forEach(element => {
                 spaceUsed += (element.quantity) * (element.item.space)
             })
             if (boxe.space >= spaceUsed) {
-                this.props.onChangeCustomPack(this.state.selectedPack.id)
                 this.handlePanelStates('initial')
-                const pack_id = this.state.selectedPack.id
-                const res = await axiosInstance.put(`api/customization/userCustomPack/detail`,
+                const packarticle_id = this.state.boxe.id
+                const new_boxe = await axiosInstance.put(`api-customization/custompack/packitems/${packarticle_id}`,
                     {
-                        "boxe_id": boxe.id,
-                        pack_id: pack_id
+                        "article_id": boxe.id,
+                        "quantity": 1,
+
                     }
                 )
-                let selectedPack = Object.assign({}, this.state.selectedPack);
-                selectedPack.boxe = res.data.boxe
-                const boxe_id = res.data.boxe.id
-                axiosInstance.get(`api/images/boxe/${boxe_id}`)
+                const boxe_id = new_boxe.data.item.id
+                axiosInstance.get(`api-images/article/${boxe_id}`)
                     .then((res) => {
                         this.setState({
-                            selectedPack,
+                            boxeImages: res.data.images,
+                            boxe: new_boxe.data,
                             selectedPackBoxeImages: res.data.images,
                             ispackBoxeImagesLoading: false
                         }, () => {
@@ -192,8 +223,8 @@ class Customization extends Component {
                             this.get_spaceLibre()
                         })
                     })
-            }
-            else {
+
+            } else {
                 this.setState({ updateBoxeFeedBack: "Espace Insuffisant" })
                 setTimeout(() => {
                     this.setState({ updateBoxeFeedBack: null, ispackBoxeImagesLoading: false })
@@ -206,24 +237,28 @@ class Customization extends Component {
     changeArticleQuantity = (action, item_id, item_quantity) => {
         this.setState({ isPackItemUpdating: true }, async () => {
             const pack_id = this.state.selectedPack.id
-            const URL = `api/customization/userCustomPack/packitems/${item_id}`
+            const URL = `api-customization/custompack/packitems/${item_id}`
             let quantity = item_quantity;
             if (action === 'delete' || (action === 'minus' && item_quantity === 1)) {
-                this.props.onChangeCustomPack(pack_id)
                 let selectedPack = Object.assign({}, this.state.selectedPack);
-                let indexOf_deleted_item = selectedPack.packitems.findIndex(function (item, index) {
+                let packarticles = [...this.state.packarticles]
+                let selectedPackItemsImages = [...this.state.selectedPackItemsImages]
+                let indexOf_deleted_item = packarticles.findIndex(function (item, index) {
                     if (item.id == item_id)
                         return true;
                 });
 
-                selectedPack.sale_price -= selectedPack.packitems[indexOf_deleted_item]?.total
                 await axiosInstance.delete(URL)
-                selectedPack.packitems.splice(indexOf_deleted_item, 1)
-                axiosInstance.get(`api/customization/custompack/total/${pack_id}`)
+                let indexOf_deleted_images = selectedPackItemsImages.findIndex(element => element.item_id === packarticles[indexOf_deleted_item]?.item?.id);
+                packarticles.splice(indexOf_deleted_item, 1)
+                selectedPackItemsImages.splice(indexOf_deleted_images, 1)
+                axiosInstance.get(`api-customization/custompack/total/${pack_id}`)
                     .then((res) => {
                         this.setState({
                             sale_price: res.data,
+                            packarticles,
                             selectedPack,
+                            selectedPackItemsImages,
                             isPackUserImageUpdating: false
                         }, () => {
                             this.get_spaceLibre()
@@ -237,17 +272,17 @@ class Customization extends Component {
                     quantity += 1
                 }
                 const res = await axiosInstance.put(URL, { quantity: quantity })
-                let selectedPack = Object.assign({}, this.state.selectedPack);
-                let indexOf_updated_item = selectedPack.packitems.findIndex(function (item, index) {
+                let packarticles = [...this.state.packarticles]
+                let indexOf_updated_item = packarticles.findIndex(function (item, index) {
                     if (item.id == item_id)
                         return true;
                 });
-                selectedPack.packitems[indexOf_updated_item] = res.data
-                axiosInstance.get(`api/customization/custompack/total/${pack_id}`)
+                packarticles[indexOf_updated_item] = res.data
+                axiosInstance.get(`api-customization/custompack/total/${pack_id}`)
                     .then((res) => {
                         this.setState({
                             sale_price: res.data,
-                            selectedPack,
+                            packarticles,
                             isPackUserImageUpdating: false
                         }, () => {
                             this.get_spaceLibre()
@@ -258,62 +293,67 @@ class Customization extends Component {
         })
     }
     addArticle = (selectedArticle) => {
-        if (selectedArticle.info.space <= this.state.spaceLibre) {
-            const articleImages = selectedArticle.images
-            const item_id = selectedArticle.info.id
-            const custompack_id = this.state.selectedPack.id
-            const pack_id = this.state.selectedPack.id
-            this.setState({ isArticleAdding: true }, async () => {
-                this.props.onChangeCustomPack(pack_id)
-                const res = await axiosInstance.post(`api/customization/userCustomPack/packitems`,
-                    {
-                        custompack_id: custompack_id,
-                        item_id: item_id
-                    })
+        this.setState({ isPackItemUpdating: true }, async () => {
+            if (selectedArticle.info.space <= this.state.spaceLibre) {
+                const articleImages = selectedArticle.images
+                const item_id = selectedArticle.info.id
+                const custompack_id = this.state.selectedPack.id
+                const pack_id = this.state.selectedPack.id
                 let selectedPack = Object.assign({}, this.state.selectedPack);
-
-                let selectedPackItemsImages = [...this.state.selectedPackItemsImages];
-                switch (res.status) {
-                    case 201:
-                        selectedPackItemsImages.push({ custompackitem_id: res.data.id, custompackitem_images: { images: [{ image: articleImages[0] }] } })
-                        selectedPack.packitems.push(res.data)
-                        this.setState({
-                            sale_price: this.state.sale_price + parseInt(res.data.total),
-                            isArticleAdding: false,
-                            selectedPackItemsImages
-                        }, () => {
-                            this.get_spaceLibre()
+                this.setState({ isArticleAdding: true }, async () => {
+                    const res = await axiosInstance.post(`api-customization/custompack/packitems`,
+                        {
+                            custompack_id: custompack_id,
+                            item_id: item_id
                         })
-                        break;
-                    case 200:
-                        const indexOf_updated_item = selectedPack.packitems.findIndex(element => element.item.id === item_id);
-                        selectedPack.packitems[indexOf_updated_item] = res.data
-                        axiosInstance.get(`api/customization/custompack/total/${pack_id}`)
-                            .then((res) => {
-                                this.setState({
-                                    sale_price: res.data,
-                                    selectedPack,
-                                    isArticleAdding: false
-                                }, () => {
-                                    this.get_spaceLibre()
-                                })
+                    let packarticles = [...this.state.packarticles]
+                    let selectedPackItemsImages = [...this.state.selectedPackItemsImages];
+                    switch (res.status) {
+                        case 201:
+                            selectedPackItemsImages.push({ item_id: res.data.item.id, item_type: res.data.item.type, images: articleImages })
+                            packarticles.push(res.data)
+                            this.setState({
+                                sale_price: this.state.sale_price + parseInt(res.data.total),
+                                isArticleAdding: false,
+                                packarticles,
+                                selectedPackItemsImages,
+                                isPackItemUpdating: false
+                            }, () => {
+                                this.get_spaceLibre()
                             })
-                        break;
-                }
-                this.setState({ updateArticleFeedBack: <FcCheckmark className="icon-medium" /> })
+                            break;
+                        case 200:
+
+                            const indexOf_updated_item = packarticles.findIndex(element => element.item.id === item_id);
+                            packarticles[indexOf_updated_item] = res.data
+                            axiosInstance.get(`api-customization/custompack/total/${pack_id}`)
+                                .then((res) => {
+                                    this.setState({
+                                        sale_price: res.data,
+                                        packarticles,
+                                        selectedPack,
+                                        isArticleAdding: false,
+                                        isPackItemUpdating: false
+                                    }, () => {
+                                        this.get_spaceLibre()
+                                    })
+                                })
+                            break;
+                    }
+                    this.setState({ updateArticleFeedBack: <FcCheckmark className="icon-medium" /> })
+                    setTimeout(() => {
+                        this.setState({ updateArticleFeedBack: null })
+                    }, 1000);
+                })
+            }
+            else {
+                this.setState({ updateArticleFeedBack: "Espace Insuffisant" })
                 setTimeout(() => {
                     this.setState({ updateArticleFeedBack: null })
                 }, 1000);
+            }
 
-
-            })
-        }
-        else {
-            this.setState({ updateArticleFeedBack: "Espace Insuffisant" })
-            setTimeout(() => {
-                this.setState({ updateArticleFeedBack: null })
-            }, 1000);
-        }
+        })
     }
     image = (e) => {
         const pack_id = this.state.selectedPack.id
@@ -321,7 +361,6 @@ class Customization extends Component {
             imageDestination: e.target.files[0],
             isPackUserImageLoading: true
         }, async () => {
-            this.props.onChangeCustomPack(pack_id)
             let formData = new FormData();
             formData.append('image', this.state.imageDestination);
             formData.append('custompack', this.state.selectedPack.id);
@@ -401,7 +440,6 @@ class Customization extends Component {
         this.setState({
             expended: false,
             currentPanelState: { value: 'initial', label: '' }
-
         })
     }
     expendPanel = () => {
@@ -478,9 +516,9 @@ class Customization extends Component {
         }
     }
     get_spaceLibre = () => {
-        let space = this.state.selectedPack.boxe.space
-        if (this.state.selectedPack.packitems.length > 0) {
-            this.state.selectedPack.packitems.forEach(element => {
+        let space = this.state.boxe.item.space
+        if (this.state.packarticles.length > 0) {
+            this.state.packarticles.forEach(element => {
                 space -= (element.quantity) * (element.item.space)
             });
             this.setState({ spaceLibre: space })
@@ -494,17 +532,17 @@ class Customization extends Component {
 
 
     render() {
-        const { showDetails } = this.state
-        const { selectedPack, packOptions, selectedPackOption, sale_price, spaceLibre, dialogOpen } = this.state;
+        const { packarticles, boxe, boxeImages } = this.state
+        const { selectedPack, packOptions, selectedPackOption, sale_price, spaceLibre, showDetails, dialogOpen } = this.state;
         const { is_createBoxe_loading, is_changingQuantity_loading, is_packLoading, createBoxe_err } = this.state
         const { isLoged } = this.props
         const { idexImage } = this.state
         const { currentPanelState, expended, panelLabelannimated } = this.state
         const { boxes, articles, articleCategories } = this.state
         const { isPanelDataloading } = this.state
-        const { isDataloading ,isEdidting } = this.state
+        const { isDataloading, isEdidting } = this.state
         const { selectedPackUserImages, selectedPackBoxeImages, selectedPackItemsImages, updateArticleFeedBack, updateBoxeFeedBack } = this.state
-        const { isArticleAdding, } = this.state
+        const { isArticleAdding, pp } = this.state
         const { isPackDataLoading, isPackUserImageLoading, ispackBoxeImagesLoading, isPackItemImageLoading, isPackUserImageUpdating, isPackItemUpdating } = this.state
         var disablePanel = "";
 
@@ -516,20 +554,48 @@ class Customization extends Component {
 
             <div>
 
-                <div className="customization ">
-                    <div className="container ">
+
+                <div className="customization">
+                    <Dialog
+                        className="dialog-content"
+                        fullWidth
+                        style={{ position: 'fixed', zIndex: 4001, padding: 0, background: "transparent" }}
+                        open={dialogOpen}
+                        fullWidth={true}
+                        aria-labelledby="max-width-dialog-title"
+                        onClose={() => { this.setState({ dialogOpen: false }) }}
+                    >
+                        <DialogContent>
+                            <div className="initial-pack">
+                            </div>
+                        </DialogContent>
+                        <DialogActions>
+                            <button className="btn btn-light" onClick={() => { this.setState({ dialogOpen: false }) }}>Close</button>
+                        </DialogActions>
+
+
+
+                    </Dialog>
+                    <div className="container  ">
                         <div className="customization-detail ">
+
                             <Accordion className="accordion  " expanded={showDetails}>
-                                <center className={showDetails || expended ? ('hidden') : ''}>
-                                    <IconButton onClick={() => this.setState({ showDetails: !this.state.showDetails })} className="p-0">
-                                        <IconContext.Provider value={{ color: "black" }}>
-                                            <CgChevronDownO />
-                                        </IconContext.Provider>
-                                    </IconButton>
-                                </center>
+                                {!showDetails ? (
+                                    <center className={showDetails || expended ? ('hidden') : ''}>
+                                        <IconButton onClick={() => this.setState({ showDetails: !this.state.showDetails })} className="p-0">
+                                            <IconContext.Provider value={{ color: "black" }}>
+                                                <CgChevronDownO />
+                                            </IconContext.Provider>
+                                        </IconButton>
+                                    </center>
+                                ) :
+                                    null
+                                }
                                 <AccordionDetails className="accordin-Details  " >
-                                    <center><div className="text-shippori mb-3 text-secondary">Essayer de créer un pack comme celui-ci selon votre désir!</div></center>
-                                    <img onClick={() => { this.setState({ dialogOpen: !this.state.dialogOpen }) }} alt="" src={'./assets/images/bag_3.png'} />
+                                    <center>
+                                        <div className="text-shippori">Initial Pack</div>
+                                    </center>
+                                    <img onClick={() => { this.setState({ dialogOpen: !this.state.dialogOpen }) }} alt="" src={this.state.image} />
                                     {showDetails ? (
                                         <center>
                                             <IconButton onClick={() => this.setState({ showDetails: !this.state.showDetails })} className="p-0">
@@ -542,7 +608,9 @@ class Customization extends Component {
                                         null
                                     }
                                 </AccordionDetails>
+
                             </Accordion>
+
                         </div>
 
                         <div className="pack-panel-zone mb-4">
@@ -550,13 +618,14 @@ class Customization extends Component {
 
                                 <CSSTransition in={expended} timeout={{ enter: 250, exit: 250 }} classNames="panel-" enter={true} appear={true}>
                                     <div className={`panel-states  ${!expended ? ('') : ''}  `}  >
-                                        <PanelSates updateBoxeFeedBack={updateBoxeFeedBack} updateArticleFeedBack={updateArticleFeedBack} spaceLibre={spaceLibre} panelLabelannimated={panelLabelannimated} packItems={selectedPack.packitems} expended={expended} showPanelData={this.showPanelData} isArticleAdding={isArticleAdding} image={this.image} changeBoxe={this.changeBoxe} addArticle={this.addArticle} expendPanel={this.expendPanel} annimatePanelLabel={this.annimatePanelLabel} handleChangeBoxe={this.handleChangeBoxe} isPanelDataloading={isPanelDataloading} currentPanelState={currentPanelState} handlePanelStates={this.handlePanelStates} boxes={boxes} articles={articles} articleCategories={articleCategories} currentBoxeSpace={selectedPack.boxe?.space} />
+                                        <PanelSates updateBoxeFeedBack={updateBoxeFeedBack} updateArticleFeedBack={updateArticleFeedBack} spaceLibre={spaceLibre} panelLabelannimated={panelLabelannimated} packItems={selectedPack?.packitems} expended={expended} showPanelData={this.showPanelData} isArticleAdding={isArticleAdding} image={this.image} changeBoxe={this.changeBoxe} addArticle={this.addArticle} expendPanel={this.expendPanel} annimatePanelLabel={this.annimatePanelLabel} handleChangeBoxe={this.handleChangeBoxe} isPanelDataloading={isPanelDataloading} currentPanelState={currentPanelState} handlePanelStates={this.handlePanelStates} boxes={boxes} articles={articles} articleCategories={articleCategories} currentBoxeSpace={selectedPack?.boxe?.space} />
                                     </div>
                                 </CSSTransition>
+
                             </div>
                             <div className={`pack-zone `}>
-                                <PackZone isEdidting={isEdidting} sale_price={selectedPack.sale_price} handleAddCartItem={this.props.handleAddCartItem} handlePanelStates={this.handlePanelStates} spaceLibre={spaceLibre} expendPanel={this.expendPanel} panelLabelannimated={panelLabelannimated} expended={expended} showPanelData={this.showPanelData} selectedPackUserImages={selectedPackUserImages} isArticleAdding={isArticleAdding} image={this.image} changeBoxe={this.changeBoxe} addArticle={this.addArticle} annimatePanelLabel={this.annimatePanelLabel} panelLabelannimated={panelLabelannimated} isPanelDataloading={isPanelDataloading} currentPanelState={currentPanelState} handlePanelStates={this.handlePanelStates} boxes={boxes} articles={articles} articleCategories={articleCategories} handleChangeBoxe={this.handleChangeBoxe} handleChangePack={this.handleChangePack} createBoxe={this.createBoxe} isLoged={isLoged} selectedPack={selectedPack} is_createBoxe_loading={is_createBoxe_loading} createBoxe_err={createBoxe_err} packOptions={packOptions} selectedPackOption={selectedPackOption} expended={expended} ChangeImageQuantity={this.ChangeImageQuantity} isPackDataLoading={isPackDataLoading} isPackUserImageLoading={isPackUserImageLoading} ispackBoxeImagesLoading={ispackBoxeImagesLoading} isPackItemImageLoading={isPackItemImageLoading} isPackUserImageUpdating={isPackUserImageUpdating} isPackItemUpdating={isPackItemUpdating} selectedPackUserImages={selectedPackUserImages} selectedPackBoxeImages={selectedPackBoxeImages} selectedPackItemsImages={selectedPackItemsImages} changeArticleQuantity={this.changeArticleQuantity} paginateImages={this.paginateImages} sale_price={sale_price} is_packLoading={is_packLoading} idexImage={idexImage} is_changingQuantity_loading={is_changingQuantity_loading} />
-                                
+                                {<PackZone boxeImages={boxeImages} packarticles={packarticles} boxe={boxe} isEdidting={isEdidting} sale_price={selectedPack?.sale_price} handleAddCartItem={this.props.handleAddCartItem} handlePanelStates={this.handlePanelStates} spaceLibre={spaceLibre} expendPanel={this.expendPanel} panelLabelannimated={panelLabelannimated} expended={expended} showPanelData={this.showPanelData} selectedPackUserImages={selectedPackUserImages} isArticleAdding={isArticleAdding} image={this.image} changeBoxe={this.changeBoxe} addArticle={this.addArticle} annimatePanelLabel={this.annimatePanelLabel} panelLabelannimated={panelLabelannimated} isPanelDataloading={isPanelDataloading} currentPanelState={currentPanelState} handlePanelStates={this.handlePanelStates} boxes={boxes} articles={articles} articleCategories={articleCategories} handleChangeBoxe={this.handleChangeBoxe} handleChangePack={this.handleChangePack} createBoxe={this.createBoxe} isLoged={isLoged} selectedPack={selectedPack} is_createBoxe_loading={is_createBoxe_loading} createBoxe_err={createBoxe_err} packOptions={packOptions} selectedPackOption={selectedPackOption} expended={expended} ChangeImageQuantity={this.ChangeImageQuantity} isPackDataLoading={isPackDataLoading} isPackUserImageLoading={isPackUserImageLoading} ispackBoxeImagesLoading={ispackBoxeImagesLoading} isPackItemImageLoading={isPackItemImageLoading} isPackUserImageUpdating={isPackUserImageUpdating} isPackItemUpdating={isPackItemUpdating} selectedPackUserImages={selectedPackUserImages} selectedPackBoxeImages={selectedPackBoxeImages} selectedPackItemsImages={selectedPackItemsImages} changeArticleQuantity={this.changeArticleQuantity} paginateImages={this.paginateImages} selectedPack={selectedPack} sale_price={sale_price} is_packLoading={is_packLoading} idexImage={idexImage} is_changingQuantity_loading={is_changingQuantity_loading} />}
+
                             </div>
                         </div>
 

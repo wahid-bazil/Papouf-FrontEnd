@@ -35,8 +35,8 @@ class CustomDialog extends Component {
         this.props.close();
 
     }
-    componentDidMount () {
-        if (this.props.item.info?.type==='packarticle') {
+    componentDidMount() {
+        if (this.props.item.info?.type === 'packarticle') {
             this.setState({
                 selectedItem: {
                     info: this.props.item.info.item,
@@ -88,12 +88,12 @@ class CustomDialog extends Component {
         return images
     }
     onChangeItem = (e) => {
-      
+
         this.setState({
             selectedItemId: parseInt(e.currentTarget.id),
-            selectedItemVariant:e.currentTarget.title
-        },()=>{
-            
+            selectedItemVariant: e.currentTarget.title
+        }, () => {
+
         })
     }
     onSelect = () => {
@@ -120,9 +120,9 @@ class CustomDialog extends Component {
 
     render() {
         const { item, open, close, handlClick, isLoading, hideItem, action, handlePanelStates, feedBack, spaceLibre } = this.props
-        const { isItemlChildrenLoading, currentState, selectedItemId, itemChildren, selectedItem ,selectedItemVariant} = this.state
-        
+        const { isItemlChildrenLoading, currentState, selectedItemId, itemChildren, selectedItem, selectedItemVariant } = this.state
         return (
+            
             <div>
                 {currentState === 0 ? (
                     <div>
@@ -138,7 +138,7 @@ class CustomDialog extends Component {
                             {!isItemlChildrenLoading ? (
                                 <div>
                                     <div className="d-flex justify-content-between p-0">
-                                       
+
                                         <IconButton className="p-0" onClick={this.close}>
                                             <IconContext.Provider value={{ color: "black" }}>
                                                 <div>
@@ -149,7 +149,7 @@ class CustomDialog extends Component {
                                     </div>
                                     <DialogContent>
                                         <div className="item-description ">
-                                            <Carousel  nextIcon={<span aria-hidden="true" className="carousel-next-icon"><i class="fas fa-arrow-circle-right "></i></span>} prevIcon={<span aria-hidden="true" className="carousel-prev-icon"><i class="fas fa-arrow-circle-left "></i></span>} interval={2000}>
+                                            <Carousel nextIcon={<span aria-hidden="true" className="carousel-next-icon"><i class="fas fa-arrow-circle-right "></i></span>} prevIcon={<span aria-hidden="true" className="carousel-prev-icon"><i class="fas fa-arrow-circle-left "></i></span>} interval={2000}>
                                                 {selectedItem.images.map(image => (
                                                     <Carousel.Item>
                                                         <img src={image} alt="" />
@@ -157,10 +157,10 @@ class CustomDialog extends Component {
                                                 ))}
                                             </Carousel>
                                         </div>
-                                        <p className="text-secondary "><span>Desciption:</span>{selectedItem?.info?.description}</p>
+                                        <p className="text-secondary "><span>Desciption:</span>{action==="deleteArticle"? selectedItem?.info?.item?.description:selectedItem?.info?.description}</p>
                                         <div className="row justify-content-between">
-                                            <h5>{selectedItem?.info?.sale_price} DH</h5>
-                                            <span className="space text-success text-600"> {selectedItem?.info?.space} cm2</span>
+                                            <h5>{action==="deleteArticle"? selectedItem?.info?.item?.sale_price:selectedItem?.info?.sale_price} DH</h5>
+                                            <span className="space text-success text-600"> {action==="deleteArticle"? selectedItem?.info?.item?.space :selectedItem?.info?.space} cm2</span>
                                         </div>
                                     </DialogContent>
                                     <div className="dialog-action p-0">
@@ -183,9 +183,7 @@ class CustomDialog extends Component {
                                                     case 'addArticle':
                                                         return (
                                                             <div className="row justify-content-between">
-                                                                {item.info?.child?.length != 0 ? (
-                                                                    <button className="btn btn-success" onClick={this.get_article_children}>Personnaliser</button>
-                                                                ) : null}
+                                                          
 
                                                                 {feedBack ? (
                                                                     <span className="msg-err">{feedBack}</span>
@@ -209,11 +207,15 @@ class CustomDialog extends Component {
                                                         )
                                                     case 'deleteArticle':
                                                         return (
-                                                            <div>
-                                                                {!isLoading ? (<button className="btn btn-danger" onClick={() => this.handlClickAndClose('delete', item.info.id)}>Delete</button>) : <span ><CircularProgress /></span>}
+                                                            <div className="row justify-content-between">
+                                                              
+                                                                <div>
+                                                                    {!isLoading ? (<button className="btn btn-danger" onClick={() => this.handlClickAndClose('delete', item.info.id)}>Delete</button>) : <span ><CircularProgress /></span>}
 
+                                                                </div>
 
                                                             </div>
+
                                                         )
                                                     case 'showBoxe':
                                                         return (
@@ -273,10 +275,10 @@ class CustomDialog extends Component {
                                     </Carousel>
                                 </div>
                                 <div className="p-2">
-                                <span className="text-secondary text-600 "> *{selectedItemVariant}</span>
+                                    <span className="text-secondary text-600 "> *{selectedItemVariant}</span>
 
                                 </div>
-                                
+
                                 <div className="row">
                                     {itemChildren.map(item => (
                                         <div key={item.id} title={item.variant_description} id={item.id} className="col-md-3 col-4 p-0" onClick={this.onChangeItem} >

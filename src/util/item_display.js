@@ -24,8 +24,8 @@ class Item extends Component {
                         }
                     </div>
                 ) :
-                    <div className="pb-5">
-                        <div class="lds-spinner "><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                    <div className="pb-5 mb-5 pt-5">
+                        <div class="lds-spinner  "><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
                     </div>
                 }
                 <center className="item-info mt-2">

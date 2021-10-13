@@ -24,10 +24,11 @@ class ChooseCategory extends Component {
     async componentDidMount() {
         this.props.expendPanel();
         this.props.annimatePanelLabel();
-        const categories = await axiosInstance.get(`api/variation/pack/article-categories/papouf-Boxes`)
-        console.log(categories.data)
+        const categories = await axiosInstance.get(`api-categories/article/categories`)
+        let indexOf_categoryBoxes = categories.data.findIndex(element => element.title === 'Boxes');
+        categories.data.splice(indexOf_categoryBoxes, 1)
         this.setState({
-            articleCategories: categories.data.article_categories,
+            articleCategories: categories.data,
 
         }, () => {
             this.props.showPanelData()
@@ -42,7 +43,7 @@ class ChooseCategory extends Component {
     render() {
         const { articleCategories } = this.state
         const { handlePanelStates, isPanelDataloading, currentPanelState } = this.props
-        const steps = ['Category', 'Article']
+        const steps = ['catégorie', "article"]
         var activeStep = 0
         switch (currentPanelState.value) {
             case 'chooseArticleCategory':
@@ -93,7 +94,7 @@ class ChooseCategory extends Component {
                                 {articleCategories.map(category => (
                                     <Carousel.Item>
                                         <div key={category.title} className="  ">
-                                            <img alt="" src={category.img} onClick={handlePanelStates} onClick={() => handlePanelStates("chooseArticle", category.title)} />
+                                            <img alt="" src={category.images[0]} onClick={handlePanelStates} onClick={() => handlePanelStates("chooseArticle", category.slug)} />
                                             <div className="item-title center mt-2">{category.title}</div>
                                         </div>
                                     </Carousel.Item>

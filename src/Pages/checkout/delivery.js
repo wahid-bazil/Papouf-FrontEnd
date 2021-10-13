@@ -1,37 +1,15 @@
 import React, { Component } from "react";
-
-
-import queryString from 'query-string';
-
-
-import { HiOutlineChevronRight } from "react-icons/hi";
 import axiosInstance from "../auth/axios"
 import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
-import Typography from '@material-ui/core/Typography';
-
-import { FaShippingFast } from 'react-icons/fa';
 import { GrFormUp } from 'react-icons/gr';
-import { BiSupport } from 'react-icons/bi';
-import { GiReceiveMoney } from 'react-icons/gi';
-import { IconContext } from "react-icons";
 import { GrFormDown } from 'react-icons/gr';
-import { HiOutlineMail } from 'react-icons/hi';
-import { RiUser3Fill } from 'react-icons/ri';
-import { MdLocalPhone } from 'react-icons/md';
-import { FaShoppingCart } from 'react-icons/fa';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
-import { VscAccount } from "react-icons/vsc";
 import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
-
-import RadioGroup from '@material-ui/core/RadioGroup';
-
 import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 class Delivery extends Component {
@@ -47,9 +25,9 @@ class Delivery extends Component {
             address: "",
             city: null,
             deliveryOptions: [
-                { value: 'Standart', label: ' Livraison Standard' },
+                { value: 'Standard', label: ' Livraison Standard' },
             ],
-            selectedOptionDelivery: { value: 'Standart', label: 'Livraison Standard' },
+            selectedOptionDelivery: { value: 'Standard', label: 'Livraison Standard' },
             isUserInfoLoading: false,
             isCartInfoLoading: false,
             isCartImagesLoading: false,
@@ -58,7 +36,7 @@ class Delivery extends Component {
             width: 0,
             delay: null,
             cost: null,
-            modeShipping: 'Livraison standard',
+            modeShipping:  { value: 'Standard', label: ' Livraison Standard' },
             modePayment: 'Paiement à la livraison',
             isDataSaving: false,
             isDataLoading: true
@@ -86,36 +64,29 @@ class Delivery extends Component {
             isCartInfoLoading: false,
         }, async () => {
             try {
-                const [firstResponse, secondResponse, thirdResponse] = await Promise.all([
-                    axiosInstance.get('api/user/detail'),
-                    axiosInstance.get('api/cart/detail'),
+                const [firstResponse, secondResponse] = await Promise.all([
+                    axiosInstance.get('api-user/details'),
+                    axiosInstance.get('api-cart/'),
                 ]);
                 if (firstResponse.data.address_details == null || firstResponse.data.address_details == undefined) {
                     this.props.history.push("./checkout");
                 }
                 else if (secondResponse.data.cartitems.length === 0) {
-                    this.props.history.push("./Acceuil")
+                    this.props.history.push("./")
                 }
                 else {
-                    console.log('here')
-                    axiosInstance.post('api/delivery/delay-cost',
+                    axiosInstance.post('api-delivery/delay-cost',
                         {
-                            city: firstResponse.data.address_details.city.title,
-                            shipping_mode: this.state.modeShipping,
-                            total :secondResponse.data.subtotal
-                        })
-                        .catch((res)=> {
-                            console.log(res)
+                            city: firstResponse.data.address_details.city,
+                            shipping_mode: this.state.modeShipping.value,
+                            order_total :secondResponse.data.subtotal
                         })
                         .then((res) => {
-                            console.log('here1')
-                            console.log(res)
                             this.setState({
                                 name: firstResponse.data.name,
-                                second_name: firstResponse.data.second_name,
                                 phone_number: firstResponse.data.phone_number,
-                                address: firstResponse.data.address_details.address,
-                                city: firstResponse.data.address_details.city.title,
+                                address: firstResponse.data.address_details.details,
+                                city: firstResponse.data.address_details.city,
                                 cartitems: secondResponse.data.cartitems,
                                 subtotal: secondResponse.data.subtotal,
                                 delay: res.data.delay_per_hour,
@@ -125,7 +96,7 @@ class Delivery extends Component {
                                 isCartImagesLoading: true,
                                 isDataLoading: false
                             }, () => {
-                                axiosInstance.get(`api/images/cartitems`)
+                                axiosInstance.get(`api-images/cartitems`)
                                     .then((res) => {
                                         this.setState({
                                             cartitemsImages: res.data,
@@ -134,6 +105,10 @@ class Delivery extends Component {
                                     })
 
                             })
+                        })
+                        .catch((res)=> {
+                            
+                            
                         })
                 }
             }
@@ -144,14 +119,12 @@ class Delivery extends Component {
         })
     }
     get_articleImages = (item_id) => {
-        console.log('here', this.state.cartitemsImages, item_id)
         let indexOf_cartitem_images = this.state.cartitemsImages.findIndex(element => element.cartitem_images.item_id === item_id);
         let images = [];
         this.state.cartitemsImages[indexOf_cartitem_images]?.cartitem_images?.images.forEach(element => {
-            images.push(element.image)
+            images.push(element)
 
         });
-        console.log(images)
         return images
     }
 
@@ -170,7 +143,7 @@ class Delivery extends Component {
     render() {
         const { cartitems, subtotal } = this.state
         const { delay, cost, isDataSaving } = this.state
-        const { name, second_name, phone_number, address, city, expanded } = this.state
+        const { name, phone_number, address, city, expanded } = this.state
         const { isUserInfoLoading, isCartInfoLoading, isCartImagesLoading, isDataLoading } = this.state
         const { selectedOptionDelivery } = this.state
         return (
@@ -200,7 +173,7 @@ class Delivery extends Component {
                                         </div>
                                         <hr className="p-0 m-0" />
                                         <div className="pl-5 pt-2 pb-2">
-                                            <div className="text-700">{name} {second_name}</div>
+                                            <div className="text-700">{name} </div>
                                             <div className="text-secondary">
                                                 {`${city} ${address}`}
                                             </div>

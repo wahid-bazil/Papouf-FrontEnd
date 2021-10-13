@@ -74,21 +74,21 @@ class ChooseArticle extends Component {
     async componentDidMount() {
         this.update();
         const category = this.props.selectedCategory
-        const res = await axiosInstance.get(`api/variation/article/${category}`)
-    
+        const res = await axiosInstance.get(`api-categories/article/category-items/${category}`)
+        console.log(res.data ,category )
         this.setState({
-            articles: res.data.items,
-            filtredArticles:res.data.items,
+            articles: res.data,
+            filtredArticles:res.data,
             isArticlesLoading: false
         }, () => {
             this.props.showPanelData()
         })
         this.props.annimatePanelLabel();
         this.setState({ isArticlesImagesLoading: true }, () => {
-            axiosInstance.get(`api/images/article/${category}`)
+            axiosInstance.get(`api-images/article/category-items/${category}`)
                 .then((res) => {
                     this.setState({
-                        articlesImages: res.data.items,
+                        articlesImages: res.data,
                        
                         isArticlesImagesLoading: false
                     })
@@ -128,10 +128,11 @@ class ChooseArticle extends Component {
 
     get_articleImages = (item_id) => {
         const articlesImages = this.state.articlesImages
+ 
         let indexOf_articleImages = articlesImages.findIndex(element => element.item_id === item_id);
         let images = [];
         articlesImages[indexOf_articleImages]?.images.forEach(element => {
-            images.push(element.image)
+            images.push(element)
         });
         return images
     }
@@ -200,7 +201,7 @@ class ChooseArticle extends Component {
     render() {
         const { filtredArticles, articlesImages, isArticlesLoading, isArticlesImagesLoading, isArticleSelected, opanDialog, selectedArticle, filterOrderOptions, filterTypeOptions, selectedfilterType, selectedfilterOrder , row , col } = this.state
         const { addArticle, isArticleAdding, handlePanelStates, selectedCategory, isPanelDataloading, packItems, spaceLibre, updateArticleFeedBack } = this.props
-     
+        
         return (
             <div>
                 {opanDialog ? (

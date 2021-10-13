@@ -17,10 +17,7 @@ class SignUp extends Component {
       email: "",
       password: "",
       name: "",
-      second_name: "",
       phone_number: "",
-      inSignUp: false,
-      is_user_created: false,
       isSubmitting: false,
       is_email_err: false,
       is_phone_number_err: false,
@@ -32,18 +29,12 @@ class SignUp extends Component {
       is_password_err: false,
       password_err2: null,
       is_password_err2: false,
-
-      inz: false,
-
-
+      err_signup: null,
     };
     this.onChange = this.onChange.bind(this);
 
   }
 
-  componentDidMount() {
-
-  }
 
   handleClick = () => {
     this.props.history.push({
@@ -70,8 +61,8 @@ class SignUp extends Component {
       this.setState({ is_password_err: false, password_err: null })
     }
     if (this.state.is_password_err2) {
-      this.setState({ password_err2: false, is_password_err2: null})
-      
+      this.setState({ password_err2: false, is_password_err2: null })
+
     }
     e.preventDefault();
     let phone_number = /^\d+$/.test(this.state.phone_number)
@@ -106,8 +97,6 @@ class SignUp extends Component {
         this.setState({ password_err2: 'les mots de passe saisis ne sont pas identiques', is_password_err2: true, isSubmitting: false })
       }, 200);
     }
-
-
     else {
       this.setState({ isSubmitting: true })
       const user = {
@@ -116,49 +105,50 @@ class SignUp extends Component {
         email: this.state.email.charAt(0).toUpperCase() + this.state.email.slice(1),
         password: this.state.password,
         name: this.state.name,
-        second_name: this.state.second_name,
         phone_number: this.state.phone_number
       };
       this.register(user)
     }
   }
   register = (newUser) => {
+    axios
+      .post("https://papouf-backend-api.herokuapp.com/api-user/sign-up/",
+        {
+          "email": newUser.email,
+          "password": newUser.password,
+          "name": newUser.name,
+          "phone_number": newUser.phone_number,
 
-    axios.post("https://papouf-backend-api.herokuapp.com/api/user/create/",
-      {
-        "email": newUser.email,
-        "password": newUser.password,
-        "name": newUser.name,
-        "second_name": newUser.second_name,
-        "phone_number": newUser.phone_number,
-
-      },
-      {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "deviceid": localStorage.getItem('device_id')
         },
-      }
-    )
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "deviceid": localStorage.getItem('device_id')
+          },
+        }
+      )
       .then((res) => {
-        console.log(res.data)
-        localStorage.setItem('access_token', res.data.access);
-        localStorage.setItem('refresh_token', res.data.refresh);
-        const location = queryString.parse(this.props.location.search).location
-        if (location === "checkout") {
+        localStorage.setItem('access_token', res.data.token.access);
+        localStorage.setItem('refresh_token', res.data.token.refresh);
+        const location = this.props.location.state?.incheckout
+        if (location) {
           this.props.history.push({
             pathname: '/checkout',
 
           });
         } else {
-          this.props.history.push("/Acceuil");
+          this.props.history.push("/");
         }
 
       })
+      .catch((err) => {
+        console.log(err.response.data)
+        this.setState({ err_signup: err.response.data?.email, isSubmitting: false })
+      });
+
 
   };
-
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
@@ -167,8 +157,6 @@ class SignUp extends Component {
     const { name_err, phone_number_err, email_err, password_err, password_err2 } = this.state
     const { is_name_err, is_phone_number_err, is_email_err, is_password_err, is_password_err2 } = this.state
     const { err_signup, isSubmitting } = this.state
-
-
     return (
       <div className="  main0  pt-5">
         <div className="Auth-container right-panel-active">

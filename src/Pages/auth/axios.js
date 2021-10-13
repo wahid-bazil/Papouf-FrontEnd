@@ -15,9 +15,8 @@ const axiosInstance = axios.create({
 
 
 	},
-	withCredentials: true,
-	crossDomain: true,
-	credentials: 'include'
+
+
 
 });
 
@@ -29,12 +28,10 @@ axiosInstance.interceptors.response.use(
 		const originalRequest = error.config;
 
 		if (typeof error.response === 'undefined') {
-			alert(
-				'A server/network error occurred. ' +
-				'Looks like CORS might be the problem. ' +
-				'Sorry about this - we will get it fixed shortly.'
-			);
+
+			window.location.reload();
 			return Promise.reject(error);
+			
 		}
 
 		if (
@@ -102,9 +99,8 @@ axiosInstance.interceptors.response.use(
 			window.location.reload();
 		}
 		else {	
-			localStorage.clear()
-			window.location.href = '/something-wrong';
-
+			
+			
 		}
 
 		// specific error handling done elsewhere

@@ -16,6 +16,7 @@ import CustomDialog from "./dialog";
 import { BsArrowUp } from "react-icons/bs";
 import { AiOutlineAppstoreAdd } from "react-icons/ai";
 import { GrFormNext } from 'react-icons/gr';
+import { Box } from "@mui/system";
 
 class PackZone extends Component {
     constructor(props) {
@@ -39,23 +40,45 @@ class PackZone extends Component {
 
         }
     }
+    update = () => {
+        this.setState({
+            width: window.innerWidth
+        }, () => {
+            if (this.state.width <= 280) {
+                this.setState({ row: 1, col: 2 })
+            }
+            else if (this.state.width <= 440) {
+                this.setState({ row: 1, col: 3 })
+            }
+            else if (this.state.width <= 950) {
+                this.setState({ row: 1, col: 3 })
+            }
+            else {
+                this.setState({ row: 1, col: 4 })
+            }
+        });
+    };
 
     componentDidMount() {
-
+        this.update();
         this.props.showPanelData()
     }
-    get_CustomPackitem_images = (custompackitem_id) => {
+    get_custompackarticle_images = (custompackitem) => {
         const selectedPackItemsImages = this.props.selectedPackItemsImages
-        let indexOf_custompackitem_Images = selectedPackItemsImages.findIndex(element => element.custompackitem_id === custompackitem_id);
-        let images = [];
-        selectedPackItemsImages[indexOf_custompackitem_Images]?.custompackitem_images.images.forEach(element => {
+        if (selectedPackItemsImages) {
+            let indexOf_custompackitem_Images = selectedPackItemsImages.findIndex(element => element.item_id === custompackitem.item.id);
+            let images = [];
+    
+            selectedPackItemsImages[indexOf_custompackitem_Images]?.images.forEach(element => {
+                images.push(element)
+            });
+    
+            return images
+            
+        }
 
-            images.push(element.image)
-
-
-        });
-        return images
     }
+
     get_boxeImages = () => {
         let images = [];
         this.props.selectedPackBoxeImages.forEach(element => {
@@ -66,12 +89,13 @@ class PackZone extends Component {
     }
 
     Dialog = (images, item, action, handlClick) => {
-
+ 
         if (this.state.dialogOpen) {
             this.setState({
                 dialogOpen: !this.state.dialogOpen,
             })
-        } else {
+        } 
+        else{
             this.setState({
                 dialogOpen: !this.state.dialogOpen,
                 dialogAction: action,
@@ -80,17 +104,19 @@ class PackZone extends Component {
                     images: images,
                     info: item,
                 }
-            }, () => {
-
             })
+        
         }
     }
 
     render() {
-        const { dialogOpen, dialogAction, selectedItem, dialogHandlClick } = this.state
-        const { selectedPack,sale_price, selectedPackUserImages, selectedPackBoxeImages, idexImage, spaceLibre, handlePanelStates ,isEdidting } = this.props
+        const {packarticles , boxe ,boxeImages} =this.props
+        const { dialogOpen, dialogAction, selectedItem, dialogHandlClick, col, row } = this.state
+        const { selectedPack, sale_price, selectedPackUserImages, selectedPackBoxeImages, idexImage, spaceLibre, handlePanelStates, isEdidting } = this.props
         const { changeArticleQuantity, isPackDataLoading, ispackBoxeImagesLoading, isPackItemImageLoading, isPackUserImageUpdating, isPackItemUpdating } = this.props
         const packImage = selectedPackUserImages[idexImage]
+       
+       
 
         let packItems_divider = [];
         for (let index = 0; index < selectedPack.packitems?.length; index += this.state.divider) {
@@ -119,8 +145,8 @@ class PackZone extends Component {
                                 ) :
                                     <div className="boxe-img ">
                                         <center>
-                                            <img alt="" src={selectedPackBoxeImages[0].image} onClick={() => this.Dialog(this.get_boxeImages(), selectedPack.boxe, 'showBoxe', handlePanelStates)} />
-                                            <div><span className="space">Espace  : {selectedPack.boxe?.space} cm2</span></div>
+                                            <img alt="" src={boxeImages[0]} onClick={() => this.Dialog(boxeImages, boxe.item, 'showBoxe', handlePanelStates)} />
+                                            <div><span className="space">Espace  : {boxe.item.space} cm2</span></div>
                                         </center>
                                         <button className="btn  " onClick={() => handlePanelStates("addBoxe")}>Changer</button>
                                     </div>
@@ -155,9 +181,10 @@ class PackZone extends Component {
                                         </IconButton>
                                         <div className={`mt-2 space text-600 p-2 ${spaceLibre <= 7 ? ('text-warning') : 'text-success'}`}>Espace libre : {spaceLibre} cm2</div>
                                     </div>
+                                    
                                     <div className=" p-0">
-                                        <Carousel cols={4} rows={1} showDots={true} mobileBreakpoint={0} gap={10} responsiveLayout={[{ breakpoint: 340, cols: 2, rows: 1, gap: 10 }, { breakpoint: 230, cols: 1, rows: 1, gap: 10 }, { breakpoint: 768, cols: 3, rows: 1, gap: 10 }]}>
-                                            {this.props.selectedPack?.packitems.map(item => (
+                                        <Carousel cols={col} rows={row} gap={10} showDots={true} mobileBreakpoint={0}>
+                                            {packarticles.map(item => (
                                                 <Carousel.Item>
                                                     <div className="items   ">
                                                         <div className={isPackItemUpdating ? ('opacity-2 avoid-click') : ''}>
@@ -174,7 +201,7 @@ class PackZone extends Component {
                                                         </div>
                                                         {!isPackItemImageLoading ? (
                                                             <div className=" ">
-                                                                <img alt="" src={this.get_CustomPackitem_images(item.id)[0]} onClick={() => this.Dialog(this.get_CustomPackitem_images(item.id), item, 'deleteArticle', changeArticleQuantity, isPackItemUpdating)} />
+                                                                <img alt="" src={this.get_custompackarticle_images(item)[0]} onClick={() => this.Dialog(this.get_custompackarticle_images(item), item, 'deleteArticle', changeArticleQuantity, isPackItemUpdating)} />
 
                                                             </div>
                                                         ) :
@@ -193,6 +220,7 @@ class PackZone extends Component {
                                             ))}
                                         </Carousel>
                                     </div>
+                                                    
                                 </div>
                             ) :
                                 <div>
@@ -212,7 +240,7 @@ class PackZone extends Component {
                         </div>
                         <div className="row total justify-content-between pr-3 pl-3 pb-3">
                             <div><span className="space text-600 " >Total : {sale_price}DH</span></div>
-                            {parseInt(sale_price) != 0 && isEdidting===false ? (<button className="btn btn-dark" onClick={() => this.props.handleAddCartItem(selectedPack)}>Ajouter </button>) : null}
+                            {parseInt(sale_price) != 0 && isEdidting === false ? (<button className="btn btn-dark" onClick={() => this.props.handleAddCartItem(selectedPack)}>Ajouter </button>) : null}
 
                         </div>
                     </div>

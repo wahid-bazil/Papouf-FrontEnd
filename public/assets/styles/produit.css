@@ -205,6 +205,40 @@
 .shipping-details .icon {
 	font-size: 23px;
 }
+.item-description {
+	font-family: 'Open Sans', sans-serif;
+	color: rgb(82, 82, 82);
+	font-size: 14px;
+}
+.category-items-page{
+    min-height: 500px;
+}
+.category-items-page .loader{
+    height: 140px;
+    width: 140px;
+}
+.category-items-page .select { 
+    max-width: 250px;
+    
+}
+.category-items-page .selected-category .title{
+    font-size: 25px;
+    font-family: Centaur,serif;
+}
+
+.category-items-page .selected-category .category-description {
+  
+    font-size: 14px;
+    font-family: 'Open Sans', sans-serif;
+}
+.error-collection-boundary {
+    height: 400px;
+}
+.error-collection-boundary p{
+    text-align: center;
+    font-family: "Open Sans",sans-serif;
+    color: rgb(83, 82, 82);
+}
 
 
   
